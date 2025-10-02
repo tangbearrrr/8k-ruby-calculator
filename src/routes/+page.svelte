@@ -112,7 +112,11 @@
         min-height: 100vh;
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
-        overflow-x: hidden;
+        overflow: hidden;
+    }
+
+    :global(html) {
+        overflow: hidden;
     }
 
     @keyframes gradientShift {
