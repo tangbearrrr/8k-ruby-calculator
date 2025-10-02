@@ -1,7 +1,7 @@
 <script lang="ts">
     let dailyKeys = '';
     let showBox20 = false;
-    let showBox50 = true; // Default to checked
+    let showBox50 = false;
     let showBox100 = false;
     let showBox120 = false;
     let selectedArea: keyof typeof areaRounds | '' = '';
