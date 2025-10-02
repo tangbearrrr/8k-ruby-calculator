@@ -1,7 +1,9 @@
 <script lang="ts">
     let dailyKeys = '';
     let showBox20 = false;
-    let showBox50 = false;
+    let showBox50 = true; // Default to checked
+    let showBox100 = false;
+    let showBox120 = false;
     let selectedArea: keyof typeof areaRounds | '' = '';
     
     let totalKeys = 0;
@@ -29,6 +31,8 @@
     $: dailyKeysCount = Math.floor(parseInt(dailyKeys, 10) || 0);
     $: box20Count = showBox20 ? 20 : 0;
     $: box50Count = showBox50 ? 50 : 0;
+    $: box100Count = showBox100 ? 50 : 0;
+    $: box120Count = showBox120 ? 50 : 0;
     $: roundsPerSet = selectedArea ? areaRounds[selectedArea as keyof typeof areaRounds] : 0;
     $: keysPerRound = selectedArea === 'NM' ? 12 : 6;
     $: rubiesPerSet = selectedArea === 'NM' ? 160 : 80;
@@ -57,23 +61,41 @@
             rubiesEarned: roundsPerSet > 0 ? Math.floor(Math.floor(Math.floor((box50Count * 60) / keysPerRound) / roundsPerSet) * rubiesPerSet) : 0,
             rubiesSpent: box50Count * 80,
             netGain: roundsPerSet > 0 ? Math.floor(Math.floor(Math.floor((box50Count * 60) / keysPerRound) / roundsPerSet) * rubiesPerSet) - (box50Count * 80) : -(box50Count * 80)
+        },
+        box100: {
+            keys: box100Count * 60,
+            rounds: Math.floor((box100Count * 60) / keysPerRound),
+            sets: roundsPerSet > 0 ? Math.floor(Math.floor((box100Count * 60) / keysPerRound) / roundsPerSet) : 0,
+            rubiesEarned: roundsPerSet > 0 ? Math.floor(Math.floor(Math.floor((box100Count * 60) / keysPerRound) / roundsPerSet) * rubiesPerSet) : 0,
+            rubiesSpent: box100Count * 100,
+            netGain: roundsPerSet > 0 ? Math.floor(Math.floor(Math.floor((box100Count * 60) / keysPerRound) / roundsPerSet) * rubiesPerSet) - (box100Count * 100) : -(box100Count * 100)
+        },
+        box120: {
+            keys: box120Count * 60,
+            rounds: Math.floor((box120Count * 60) / keysPerRound),
+            sets: roundsPerSet > 0 ? Math.floor(Math.floor((box120Count * 60) / keysPerRound) / roundsPerSet) : 0,
+            rubiesEarned: roundsPerSet > 0 ? Math.floor(Math.floor(Math.floor((box120Count * 60) / keysPerRound) / roundsPerSet) * rubiesPerSet) : 0,
+            rubiesSpent: box120Count * 120,
+            netGain: roundsPerSet > 0 ? Math.floor(Math.floor(Math.floor((box120Count * 60) / keysPerRound) / roundsPerSet) * rubiesPerSet) - (box120Count * 120) : -(box120Count * 120)
         }
     };
 
     $: {
-        totalKeys = keySourceData.daily.keys + keySourceData.box20.keys + keySourceData.box50.keys;
+        totalKeys = keySourceData.daily.keys + keySourceData.box20.keys + keySourceData.box50.keys + keySourceData.box100.keys + keySourceData.box120.keys;
         rounds = Math.floor(totalKeys / keysPerRound);
         sets = roundsPerSet > 0 ? Math.floor(rounds / roundsPerSet) : 0;
         remainingKeys = totalKeys - (rounds * keysPerRound);
         grossRubies = sets * rubiesPerSet;
-        rubiesSpent = keySourceData.box20.rubiesSpent + keySourceData.box50.rubiesSpent;
+        rubiesSpent = keySourceData.box20.rubiesSpent + keySourceData.box50.rubiesSpent + keySourceData.box100.rubiesSpent + keySourceData.box120.rubiesSpent;
         netRubies = grossRubies - rubiesSpent;
     }
 
     $: activeKeySources = [
         dailyKeysCount > 0 && { name: 'Daily Keys', ...keySourceData.daily },
         showBox20 && { name: '20 Key Boxes', ...keySourceData.box20 },
-        showBox50 && { name: '50 Key Boxes', ...keySourceData.box50 }
+        showBox50 && { name: '50 Key Boxes', ...keySourceData.box50 },
+        showBox100 && { name: '100 Key Boxes', ...keySourceData.box100 },
+        showBox120 && { name: '120 Key Boxes', ...keySourceData.box120 }
     ].filter(Boolean);
 </script>
 
@@ -491,12 +513,22 @@
 
         <div class="checkbox-container">
             <input type="checkbox" id="box20-check" bind:checked={showBox20} />
-            <label for="box20-check" class="checkbox-label">20 Key Boxes (50 rubies each)</label>
+            <label for="box20-check" class="checkbox-label">50 ruby box (quantity: 20)</label>
         </div>
 
         <div class="checkbox-container">
             <input type="checkbox" id="box50-check" bind:checked={showBox50} />
-            <label for="box50-check" class="checkbox-label">50 Key Boxes (80 rubies each)</label>
+            <label for="box50-check" class="checkbox-label">80 ruby box (quantity: 50)</label>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="box100-check" bind:checked={showBox100} />
+            <label for="box100-check" class="checkbox-label">100 ruby box (quantity: 50)</label>
+        </div>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="box120-check" bind:checked={showBox120} />
+            <label for="box120-check" class="checkbox-label">120 ruby box (quantity: 50)</label>
         </div>
 
         <label>
@@ -564,6 +596,24 @@
             {:else}
             <div class="stat-row">
                 50 Key Boxes: <span class="placeholder">-</span>
+            </div>
+            {/if}
+            {#if showBox100}
+            <div class="stat-row">
+                100 Key Boxes: <span class="negative-value">-{keySourceData.box100.rubiesSpent}</span>
+            </div>
+            {:else}
+            <div class="stat-row">
+                100 Key Boxes: <span class="placeholder">-</span>
+            </div>
+            {/if}
+            {#if showBox120}
+            <div class="stat-row">
+                120 Key Boxes: <span class="negative-value">-{keySourceData.box120.rubiesSpent}</span>
+            </div>
+            {:else}
+            <div class="stat-row">
+                120 Key Boxes: <span class="placeholder">-</span>
             </div>
             {/if}
             <div class="stat-total">
