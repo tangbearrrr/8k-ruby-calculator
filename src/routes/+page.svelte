@@ -207,6 +207,27 @@
         animation: float 3s ease-in-out infinite;
     }
 
+    .warning-message {
+        background: rgba(255, 107, 138, 0.2);
+        border: 1px solid rgba(255, 107, 138, 0.4);
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1.5rem;
+        color: #ff6b8a;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
     label {
         font-size: 1rem;
         font-weight: 600;
@@ -430,6 +451,31 @@
         50% { transform: translateY(-3px); }
     }
 
+    .credit-footer {
+        text-align: center;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        color: rgba(150, 150, 180, 0.7);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .contact-info {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .contact-info a {
+        color: rgba(100, 120, 180, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .contact-info a:hover {
+        color: rgba(100, 120, 180, 1);
+        text-decoration: underline;
+    }
+
     /* Responsive design for mobile */
     @media (max-width: 768px) {
         .container {
@@ -455,6 +501,11 @@
         <div class="simple-header">
             <img class="ruby-icon" src="https://skiagb.gcdn.netmarble.com/skiagb/web_images/product/detail/1/11.png" alt="Ruby" />
             Ruby Calculator
+        </div>
+        
+        <!-- Warning message -->
+        <div class="warning-message">
+            ⚠️ Now supports only Premium
         </div>
         
         <label>
@@ -591,4 +642,12 @@
         </div>
     </div>
     {/if}
+</div>
+
+<!-- Credit footer -->
+<div class="credit-footer">
+    Need supports ?
+    <div class="contact-info">
+        Contact us: <a href="mailto:mheenotalk@gmail.com">mheenotalk@gmail.com</a>
+    </div>
 </div>
