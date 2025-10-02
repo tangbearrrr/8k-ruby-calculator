@@ -147,27 +147,34 @@
             inset 0 -1px 0 rgba(100, 120, 180, 0.2);
     }
 
-    .result-sidebar {
-        background: rgba(30, 30, 50, 0.3);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+    .results-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
         width: 280px;
-        border-radius: 24px;
-        border: 1px solid rgba(100, 120, 180, 0.2);
-        box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(100, 120, 180, 0.3),
-            inset 0 -1px 0 rgba(100, 120, 180, 0.1);
-        padding: 1.5rem;
-        color: rgba(220, 220, 240, 0.95);
         height: fit-content;
         position: sticky;
         top: 4rem;
-        overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    .result-sidebar::before {
+    .result-box {
+        background: rgba(30, 30, 50, 0.3);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(100, 120, 180, 0.2);
+        box-shadow: 
+            0 6px 24px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(100, 120, 180, 0.3),
+            inset 0 -1px 0 rgba(100, 120, 180, 0.1);
+        padding: 1.25rem;
+        color: rgba(220, 220, 240, 0.95);
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+
+    .result-box::before {
         content: '';
         position: absolute;
         top: 0;
@@ -180,10 +187,10 @@
             transparent 100%);
     }
 
-    .result-sidebar:hover {
+    .result-box:hover {
         transform: translateY(-2px);
         box-shadow: 
-            0 12px 40px rgba(0, 0, 0, 0.4),
+            0 10px 32px rgba(0, 0, 0, 0.4),
             inset 0 1px 0 rgba(100, 120, 180, 0.4),
             inset 0 -1px 0 rgba(100, 120, 180, 0.2);
     }
@@ -308,43 +315,12 @@
             inset 0 1px 0 rgba(100, 120, 180, 0.3);
     }
 
-    .result {
-        background: transparent;
-        border-radius: 0;
-        padding: 0;
-        margin-top: 0;
-        border: none;
-        font-size: 0.95rem;
-        color: rgba(220, 220, 240, 0.95);
-        text-align: left;
-    }
-
     .section-header {
         margin-bottom: 0.5rem;
         font-weight: 700;
         color: rgba(220, 220, 240, 0.95);
         font-size: 1.1rem;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    .section-divider {
-        margin-top: 0.8rem;
-        padding-top: 0.8rem;
-        border-top: 1px solid rgba(100, 120, 180, 0.3);
-        position: relative;
-    }
-
-    .section-divider::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -1.5rem;
-        right: -1.5rem;
-        height: 1px;
-        background: linear-gradient(90deg, 
-            transparent 0%, 
-            rgba(100, 120, 180, 0.4) 50%, 
-            transparent 100%);
     }
 
     .stat-row {
@@ -484,12 +460,12 @@
             margin-top: 2rem;
         }
         
-        .result-sidebar {
+        .results-container {
             width: 100%;
             position: static;
         }
         
-        .simple-window, .result-sidebar {
+        .simple-window, .result-box {
             border-radius: 20px;
             padding: 1.5rem 1rem;
         }
@@ -547,101 +523,64 @@
         </label>
     </div>
 
-    {#if totalKeys > 0}
-    <div class="result-sidebar">
-        <div class="result">
+    <div class="results-container">
+        <!-- Farming Summary Box -->
+        <div class="result-box">
             <div class="section-header">
                 Farming Summary
             </div>
             <div class="stat-row">
-                Total Keys: <span class="ruby-highlight">{totalKeys}</span>
+                Total Keys: <span class="{totalKeys > 0 ? 'ruby-highlight' : 'placeholder'}">{totalKeys > 0 ? totalKeys : '-'}</span>
             </div>
             <div class="stat-row">
-                Farming Rounds: <span class="ruby-highlight">{rounds}</span>
+                Farming Rounds: <span class="{rounds > 0 ? 'ruby-highlight' : 'placeholder'}">{rounds > 0 ? rounds : '-'}</span>
             </div>
             <div class="stat-row">
-                Complete Sets: <span class="ruby-highlight">{sets}</span>
+                Complete Sets: <span class="{sets > 0 ? 'ruby-highlight' : 'placeholder'}">{sets > 0 ? sets : '-'}</span>
             </div>
             <div class="stat-row">
-                Remaining Keys: <span class="ruby-highlight">{remainingKeys}</span>
+                Remaining Keys: <span class="{totalKeys > 0 ? 'ruby-highlight' : 'placeholder'}">{totalKeys > 0 ? remainingKeys : '-'}</span>
             </div>
-            
-            {#if rubiesSpent > 0}
-            <div class="section-divider">
-                <div class="section-header">
-                    Ruby Spend
-                </div>
-                {#if showBox20}
-                <div class="stat-row">
-                    20 Key Boxes: <span class="negative-value">-{keySourceData.box20.rubiesSpent}</span>
-                </div>
-                {/if}
-                {#if showBox50}
-                <div class="stat-row">
-                    50 Key Boxes: <span class="negative-value">-{keySourceData.box50.rubiesSpent}</span>
-                </div>
-                {/if}
-                <div class="stat-total">
-                    Total Ruby Spend: <span class="negative-value total-value">-{rubiesSpent}</span>
-                </div>
+        </div>
+        
+        <!-- Ruby Spend Box -->
+        <div class="result-box">
+            <div class="section-header">
+                Ruby Spend
+            </div>
+            {#if showBox20}
+            <div class="stat-row">
+                20 Key Boxes: <span class="negative-value">-{keySourceData.box20.rubiesSpent}</span>
+            </div>
+            {:else}
+            <div class="stat-row">
+                20 Key Boxes: <span class="placeholder">-</span>
             </div>
             {/if}
-            
-            <div class="section-divider">
-                <div class="section-header">
-                    Net Gain
-                </div>
-                <div class="stat-total">
-                    Total Net Rubies: <span class="ruby-highlight total-value" style="color: {netRubies >= 0 ? '#28a745' : '#dc3545'};">{netRubies >= 0 ? '+' : ''}{netRubies}</span>
-                </div>
+            {#if showBox50}
+            <div class="stat-row">
+                50 Key Boxes: <span class="negative-value">-{keySourceData.box50.rubiesSpent}</span>
+            </div>
+            {:else}
+            <div class="stat-row">
+                50 Key Boxes: <span class="placeholder">-</span>
+            </div>
+            {/if}
+            <div class="stat-total">
+                Total Ruby Spend: <span class="{rubiesSpent > 0 ? 'negative-value total-value' : 'placeholder total-value'}">{rubiesSpent > 0 ? `-${rubiesSpent}` : '-'}</span>
             </div>
         </div>
-    </div>
-    {:else}
-    <div class="result-sidebar">
-        <div class="result">
+        
+        <!-- Net Gain Box -->
+        <div class="result-box">
             <div class="section-header">
-                Farming Summary
+                Net Gain
             </div>
-            <div class="stat-row">
-                Total Keys: <span class="placeholder">-</span>
-            </div>
-            <div class="stat-row">
-                Farming Rounds: <span class="placeholder">-</span>
-            </div>
-            <div class="stat-row">
-                Complete Sets: <span class="placeholder">-</span>
-            </div>
-            <div class="stat-row">
-                Remaining Keys: <span class="placeholder">-</span>
-            </div>
-            
-            <div class="section-divider">
-                <div class="section-header">
-                    Ruby Spend
-                </div>
-                <div class="stat-row">
-                    20 Key Boxes: <span class="placeholder">-</span>
-                </div>
-                <div class="stat-row">
-                    50 Key Boxes: <span class="placeholder">-</span>
-                </div>
-                <div class="stat-total">
-                    Total Ruby Spend: <span class="placeholder total-value">-</span>
-                </div>
-            </div>
-            
-            <div class="section-divider">
-                <div class="section-header">
-                    Net Gain
-                </div>
-                <div class="stat-total">
-                    Total Net Rubies: <span class="placeholder total-value">-</span>
-                </div>
+            <div class="stat-total">
+                Total Net Rubies: <span class="{totalKeys > 0 ? 'ruby-highlight total-value' : 'placeholder total-value'}" style="color: {totalKeys > 0 ? (netRubies >= 0 ? '#28a745' : '#dc3545') : 'inherit'};">{totalKeys > 0 ? (netRubies >= 0 ? '+' : '') + netRubies : '-'}</span>
             </div>
         </div>
     </div>
-    {/if}
 </div>
 
 <!-- Credit footer -->
